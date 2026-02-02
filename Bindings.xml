@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="HIDE_ACTIONBAR_TOGGLE" category="Hide Actionbar">
+        HideActionbar_Toggle()
+    </Binding>
+</Bindings>

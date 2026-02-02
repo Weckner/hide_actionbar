@@ -1,0 +1,9 @@
+## Interface: 120000
+## Title: Hide_Actionbar
+## Notes: Toggle actionbar visibility with a keybind
+## Author: Scoffs
+## Version: 1.0.0
+## IconTexture: Interface\Icons\INV_Misc_QuestionMark
+## SavedVariables: HideActionbarDB
+
+hide_actionbar.lua
