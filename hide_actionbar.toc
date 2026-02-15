@@ -1,4 +1,4 @@
-## Interface: 120000
+## Interface: 120001
 ## Title: Hide_Actionbar
 ## Notes: Toggle actionbar visibility with a keybind
 ## Author: Scoffs
