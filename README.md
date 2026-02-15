@@ -5,7 +5,7 @@ A simple World of Warcraft addon to toggle actionbar visibility with a keybind o
 ## Features
 
 - Toggle visibility of all action bars with a single keybind
-- Configure which bars to hide/show
+- Configure which bars to hide via the addon settings panel
 - Adjustable hidden opacity (fully hidden or semi-transparent)
 - Settings saved per character
 
@@ -17,31 +17,26 @@ A simple World of Warcraft addon to toggle actionbar visibility with a keybind o
 ## Usage
 
 ### Keybind
-Go to **Options → Keybindings → Hide Actionbar** and set your preferred key.
+Go to **Options > Keybindings > Addons > Hide Actionbar** and set your preferred key.
+
+### Settings Panel
+Go to **Options > Addons > Hide Actionbar** to configure which bars are affected and the hidden opacity.
 
 ### Slash Commands
 
 | Command | Description |
 |---------|-------------|
-| `/hab` | Show help |
-| `/hab toggle` | Toggle bar visibility |
-| `/hab list` | Show all bars and their status |
-| `/hab enable <bar>` | Enable a bar for hiding |
-| `/hab disable <bar>` | Exclude a bar from hiding |
-| `/hab opacity <0-1>` | Set hidden opacity (0 = invisible) |
+| `/hab` | Toggle bar visibility |
+| `/hab options` | Open the settings panel |
 
 ### Available Bars
 
-- `main` - Main Action Bar
-- `bottomleft` - Multi Bar Bottom Left
-- `bottomright` - Multi Bar Bottom Right
-- `left` - Multi Bar Left
-- `right` - Multi Bar Right
-- `bar5` - `bar7` - Additional Bars
-- `stance` - Stance Bar
-- `pet` - Pet Action Bar
-- `micro` - Micro Menu
-- `bags` - Bags Bar
+- Main Action Bar
+- Multi Bars 1-7
+- Stance Bar
+- Pet Action Bar
+- Micro Menu
+- Bags Bar
 
 ## License
 
