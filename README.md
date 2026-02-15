@@ -1,6 +1,6 @@
 # Hide Actionbar
 
-A simple World of Warcraft addon to toggle actionbar visibility with a keybind or slash command.
+A simple World of Warcraft addon to toggle actionbar visibility with a keybind or mouseover
 
 ## Features
 
