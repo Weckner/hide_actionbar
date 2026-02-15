@@ -6,7 +6,7 @@
 local addonName = ...
 
 -- Bar definitions with frame names
--- MainActionBar (11.0+) / MainMenuBar (legacy) handled via fallback
+-- MainActionBar (11.0+) / MainMenuBar (legacy)
 local bars = {
     { id = "main",        frame = "MainActionBar",      fallback = "MainMenuBar", name = "Main Action Bar" },
     { id = "bottomleft",  frame = "MultiBarBottomLeft",  name = "Bar 1" },
@@ -26,6 +26,7 @@ local bars = {
 local defaults = {
     hiddenAlpha = 0,
     isHidden = false,
+    mouseoverReveal = false,
     enabledBars = {},
 }
 
@@ -66,6 +67,62 @@ function HideActionbar_Toggle()
 end
 
 -----------------------------------------------------------------------
+-- Mouseover reveal
+-----------------------------------------------------------------------
+
+local mouseoverFrame = CreateFrame("Frame")
+local MOUSEOVER_POLL_RATE = 0.05
+local activeMouseoverBars = {}
+
+-- Check if the mouse is over a frame or any of its children
+local function IsMouseOverFrame(frame)
+    if not frame or not frame:IsVisible() then return false end
+    if frame:IsMouseOver() then return true end
+    for _, child in ipairs({frame:GetChildren()}) do
+        if child:IsMouseOver() then return true end
+    end
+    return false
+end
+
+local function OnMouseoverUpdate(self, elapsed)
+    for bar, frame in pairs(activeMouseoverBars) do
+        if HideActionbarDB.enabledBars[bar.id] and HideActionbarDB.isHidden then
+            if IsMouseOverFrame(frame) then
+                frame:SetAlpha(1)
+            else
+                frame:SetAlpha(HideActionbarDB.hiddenAlpha)
+            end
+        end
+    end
+end
+
+local function EnableMouseover()
+    activeMouseoverBars = {}
+    for _, bar in ipairs(bars) do
+        local frame = GetBarFrame(bar)
+        if frame then
+            activeMouseoverBars[bar] = frame
+        end
+    end
+    mouseoverFrame:SetScript("OnUpdate", OnMouseoverUpdate)
+end
+
+local function DisableMouseover()
+    mouseoverFrame:SetScript("OnUpdate", nil)
+    activeMouseoverBars = {}
+    -- Reapply current state to reset any mid-hover bars
+    ApplyState()
+end
+
+local function UpdateMouseover()
+    if HideActionbarDB.mouseoverReveal then
+        EnableMouseover()
+    else
+        DisableMouseover()
+    end
+end
+
+-----------------------------------------------------------------------
 -- Saved variables
 -----------------------------------------------------------------------
 
@@ -77,6 +134,9 @@ local function InitDB()
     end
     if HideActionbarDB.isHidden == nil then
         HideActionbarDB.isHidden = defaults.isHidden
+    end
+    if HideActionbarDB.mouseoverReveal == nil then
+        HideActionbarDB.mouseoverReveal = defaults.mouseoverReveal
     end
 
     HideActionbarDB.enabledBars = HideActionbarDB.enabledBars or {}
@@ -118,6 +178,21 @@ local function InitializeSettings()
         return string.format("%.0f%%", value * 100)
     end)
     Settings.CreateSlider(category, opacitySetting, sliderOptions, "How transparent the bars become when hidden. 0% = fully invisible, 100% = fully visible.")
+
+    -- Mouseover reveal checkbox
+    local mouseoverSetting = Settings.RegisterProxySetting(
+        category,
+        "HIDEACTIONBAR_MOUSEOVER",
+        Settings.VarType.Boolean,
+        "Reveal on Mouseover",
+        defaults.mouseoverReveal,
+        function() return HideActionbarDB.mouseoverReveal end,
+        function(value)
+            HideActionbarDB.mouseoverReveal = value
+            UpdateMouseover()
+        end
+    )
+    Settings.CreateCheckbox(category, mouseoverSetting, "When enabled, hovering over a hidden bar will temporarily reveal it at full opacity.")
 
     -- Bar checkboxes
     layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Bars to Hide"))
@@ -182,6 +257,7 @@ frame:SetScript("OnEvent", function()
     InitDB()
     InitializeSettings()
     ApplyState()
+    UpdateMouseover()
 end)
 
 -- Keybind localization
